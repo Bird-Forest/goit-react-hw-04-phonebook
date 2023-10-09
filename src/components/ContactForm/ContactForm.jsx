@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import {
   Form,
@@ -7,57 +6,44 @@ import {
   ContactNumber,
   BtnAdd,
 } from './ContactForm.styled';
+import { useState } from 'react';
 
-export default class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-    id: '',
-  };
-  handleInputChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-  handleSubmit = event => {
+export const ContactForm = props => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleSubmit = event => {
     event.preventDefault();
     const newContact = {
-      name: this.state.name,
-      number: this.state.number,
+      name: name,
+      number: number,
       id: nanoid(),
     };
-    this.props.onAddContact(newContact);
+    props.onAddContact(newContact);
 
-    this.setState({
-      name: '',
-      number: '',
-      id: '',
-    });
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    return (
-      <div>
-        <Form onSubmit={this.handleSubmit}>
-          <MarkField>Name</MarkField>
-          <ContactName
-            onChange={this.handleInputChange}
-            type="text"
-            name="name"
-            value={this.state.name}
-            required
-          />
-          <MarkField>Number</MarkField>
-          <ContactNumber
-            onChange={this.handleInputChange}
-            type="tel"
-            name="number"
-            value={this.state.number}
-            required
-          />
-          <BtnAdd type="submit">Add contact</BtnAdd>
-        </Form>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Form onSubmit={handleSubmit}>
+        <MarkField>Name</MarkField>
+        <ContactName
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          required
+        />
+        <MarkField>Number</MarkField>
+        <ContactNumber
+          type="tel"
+          value={number}
+          onChange={e => setNumber(e.target.value)}
+          required
+        />
+        <BtnAdd type="submit">Add contact</BtnAdd>
+      </Form>
+    </div>
+  );
+};
